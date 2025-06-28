@@ -1,0 +1,3 @@
+@echo off
+copy /b "part1.bin" + "part2.bin" "original_combined.bin" >nul
+echo Files combined successfully: original_combined.bin

@@ -1,0 +1,19 @@
+@echo off
+setlocal
+
+REM Configuration
+set "INPUT_FILE=k6-v1.1.0.md"  REM Replace with your filename
+set "PART1=part1.bin"
+set "PART2=part2.bin"
+set /a "SPLIT_SIZE=15 * 1024 * 1024"  REM 15MB in bytes
+
+REM Split the file using PowerShell
+powershell -Command ^
+    "$bytes = [System.IO.File]::ReadAllBytes('%INPUT_FILE%');" ^
+    "[System.IO.File]::WriteAllBytes('%PART1%', $bytes[0..(%SPLIT_SIZE%-1)]);" ^
+    "[System.IO.File]::WriteAllBytes('%PART2%', $bytes[%SPLIT_SIZE%..($bytes.Length-1)]);"
+
+echo File split completed:
+echo   Part 1: %PART1% (%SPLIT_SIZE% bytes)
+echo   Part 2: %PART2% (Remaining bytes)
+endlocal
