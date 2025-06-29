@@ -1,0 +1,33 @@
+apiVersion: k6.io/v1alpha1
+kind: TestRun
+metadata:
+  name: advanced-k6-demo
+spec:
+  parallelism: 2  # 并行运行2个测试实例
+  script:
+    configMap:
+      name: my-test2
+      file: test.js
+  runner:
+    env:
+      - name: K6_OUT
+        value: "influxdb"
+      - name: K6_INFLUXDB_ADDR
+        value: "http://influxdb.monitoring.svc.cluster.local:8086"
+      - name: K6_INFLUXDB_DB
+        value: "k6"
+      - name: K6_INFLUXDB_INSECURE
+        value: "true"
+      - name: K6_INFLUXDB_TAGS_AS_FIELDS
+        value: "vu,iter,method"
+      - name: K6_INFLUXDB_PUSH_INTERVAL
+        value: "10s"  # 降低写入频率减少负载
+      - name: K6_INFLUXDB_CONCURRENT_WRITES
+        value: "4"    # 增加并发写入数
+    resources:
+      limits:
+        cpu: "2"
+        memory: "512Mi"
+      requests:
+        cpu: "500m"
+        memory: "256Mi"
